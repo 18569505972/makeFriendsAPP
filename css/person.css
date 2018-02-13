@@ -1,0 +1,19 @@
+html,body {
+	font-family: Microsoft YaHei;
+	background-color:transparent;
+}
+#myMsg{
+	margin-top:18px;
+	border-top:1px #FFFFFF solid;
+}
+p{
+	background-image:url('../image/forward.png');
+	background-repeat:no-repeat;
+	background-size:12px 21.5px;
+	background-position:93% center;
+	padding:18px 0;
+	padding-left: 18px;
+	color: #FFFFFF;
+	font-size:18px;
+	border-bottom:1px #FFFFFF solid;
+}

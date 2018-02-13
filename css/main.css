@@ -1,0 +1,114 @@
+body {
+    height:100%;
+    font-family: Microsoft YaHei;
+}
+::-webkit-input-placeholder { 
+	color: rgba(256,256,256,0.4); 
+	font-size: 16px;
+}
+#bgcolor{
+	position:fixed;
+	top: 0;
+	left: 0;
+	width:100%;
+	height: 100%;
+	z-index: 0;
+}
+#container{
+	position:relative;
+	z-index:1;
+    overflow: hidden;
+}
+#ICON{
+	width:98.5px;
+	display:block;
+	border:3px #FFF solid;
+	border-radius:50%;
+	margin:0 auto;
+	margin-top:61px;
+}
+#USERNUM{
+	width: 233px;
+	background-image:url("../image/user.png");
+	background-repeat:no-repeat;
+	background-position:19px center;
+	background-size:22.5px;
+	height:51px;
+	margin:0 auto;
+	margin-top:25px;
+	padding-left:60.5px;
+	line-height: 51px;
+}
+#PWDNUM{
+	width: 233px;
+	background-image:url("../image/lock.png");
+	background-repeat:no-repeat;
+	background-position:19px center;
+	background-size:22.5px;
+	height:51px;
+	margin:0 auto;
+	padding-left:60.5px;
+	line-height: 51px;
+}
+hr{
+    width: 293.5px;
+    height: 1px;
+    background-color:#FFF;
+    margin:0 auto;
+ }
+ input{
+    display:inline-block;
+    width:170px;
+ 	border: none;
+ 	background-color:transparent;
+ 	height:23px;
+ 	color: #FFFFFF;
+ 	line-height: 23px;
+ 	font-size:16px;
+ 	white-space: 3px;
+ }
+ .eye{
+ 	background-image:url("../image/eye.png");
+ 	background-repeat:no-repeat;
+	background-position:190px center;
+	background-size:25px 23px;
+	padding-right:63px;
+}
+#error{
+	height:16px;
+ 	text-align:center;
+ 	font-size: 16px;
+ 	color:#F00;
+}
+ #LOGIN{
+ 	width: 293.5px;
+ 	margin:0 auto;
+ 	border:#FFF 1px solid;
+ 	color:#FFFFFF;
+ 	text-align: center;
+ 	font-size:20px;
+ 	height:42px;
+ 	line-height: 42px;
+ 	margin-top:50px;
+}
+#OTHER{
+	margin-top:115px;
+}
+#register{
+	display:inline-block;
+	color:#FFFFFF;
+	font-size:18px;
+	padding:10px 16px;
+}
+#forget{
+	display:inline-block;
+	color:#FFFFFF;
+	font-size:18px;
+	float: right;
+	padding:10px 16px;
+}
+ 
+
+
+
+

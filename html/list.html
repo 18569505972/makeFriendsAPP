@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>title</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/communication.css"/>
+	</head>
+	<body>
+		<img src="../image/login02.jpg"  id="bgcolor"/>
+		<section>
+			<div class="search" onclick="searchfriend()" tapmode>
+				搜索
+			</div>
+			<hr />
+		</section>
+	</body>
+	<script src="../script/jquery-1.9.1.js"></script>
+	<script type="text/javascript">
+		apiready = function() {
+			username = api.pageParam.username;
+			userId = api.pageParam.userId;
+			name=api.pageParam.name;
+			var model = api.require("model");
+			//我发给朋友消息
+			var relation = api.require('relation');
+			relation.findAll({
+				class : 'user',
+				id : userId,
+				column : 'friends'
+			}, function(ret, err) {
+				if (ret) {
+					alert('查询我的朋友表' + JSON.stringify(ret));
+					for (var n = 0; n < ret.length; n++) {
+						$("section").append("<div class='friend'><span class='name'>" + ret[n].note + "</span><input type='hidden' value='" + ret[n].id + "'/></div>");
+					}
+					$(".friend").on('click', function() {
+						var note=$(this).children('.name').eq(0).html();
+						var friendid=$(this).children('input').eq(0).val();
+						api.openWin({
+							name : 'manage',
+							url : 'manage.html',
+							rect : {
+								x : 0,
+								y : 0,
+								w : 'auto',
+								h : 'auto'
+							},
+							bounces : true,
+							animation : {
+								type : "un_curl ",
+								subType : "from_right",
+								duration : 300
+							},
+							bgColor : '../image/login02.jpg',
+							pageParam : {
+								userId : userId,
+								username : username,
+								note : note,
+								friendid : friendid
+							}
+						});
+					})
+				} else {
+					alert('查询我的朋友表失败' + JSON.stringify(err));
+				}
+			});
+		};
+		function searchfriend() {
+			api.openWin({
+				name : 'searchfriend',
+				url : 'searchfriend.html',
+				rect : {
+					x : 0,
+					y : 0,
+					w : 'auto',
+					h : 'auto'
+				},
+				bounces : false,
+				animation : {
+					type : "un_curl ",
+					subType : "from_right",
+					duration : 300
+				},
+				bgColor : '../image/login02.jpg',
+				pageParam : {
+					userId : userId,
+					username : username,
+					name:name
+				}
+			});
+		}
+	</script>
+</html>

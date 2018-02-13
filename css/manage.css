@@ -1,0 +1,33 @@
+body {
+	font-family: Microsoft YaHei;
+	background-color:transparent;
+}
+#bgcolor{
+	position:fixed;
+	top: 0;
+	left: 0;
+	width:100%;
+	height: 100%;
+	z-index: 0;
+}
+header{
+	background-image:url("../image/login01.jpg");
+	background-repeat:no-repeat;
+	color: #fff;
+    width: 100%;
+    height: 48px;
+    text-align: center;
+}
+header img{
+	width:12px;
+	left:17px;
+	position: absolute;
+	top:14.75px;
+}
+header span{
+	display:inline-block;
+	height: 48px;
+	line-height: 48px;
+	color:#FFFFFF;
+	font-size: 22px;
+}

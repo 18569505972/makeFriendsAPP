@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>title</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/msglist.css"/>
+	</head>
+	<body>
+		<img src="../image/login02.jpg"  id="bgcolor"/>
+		<section>
+			<p id="firstP">
+				帐号： <span id="username"></span>
+			</p>
+			<p>
+				姓名： <span id="friend_note"></span>
+			</p>
+			<p>
+				学校： <span id="school"></span>
+			</p>
+			<p>
+				专业： <span id="professional"></span>
+			</p>
+		</section>
+		<footer id="delect" onclick="delectFriend()" tapmode>
+			删除好友
+		</footer>
+	</body>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript">
+		apiready = function() {
+			username = api.pageParam.username;
+			userId = api.pageParam.userId;
+			note = api.pageParam.note;
+			friendid = api.pageParam.friendid;
+			var query = api.require("query");
+			query.createQuery(function(ret, err) {
+				if (ret) {
+					var queryId = ret.qid;
+					query.whereEqual({
+						qid : queryId,
+						column : "name",
+						value : note
+					});
+					var model = api.require("model");
+					model.findAll({
+						class : "user",
+						qid : queryId
+					}, function(ret, err) {
+						if (ret) {
+							alert('获取好友信息成功' + JSON.stringify(ret));
+							document.getElementById('username').innerHTML = ret[0].username;
+							document.getElementById('friend_note').innerHTML = ret[0].name;
+							document.getElementById('school').innerHTML = ret[0].school;
+							document.getElementById('professional').innerHTML = ret[0].professional;
+						} else {
+							alert('获取好友信息失败' + JSON.stringify(err));
+						}
+					});
+				} else {
+					alert(JSON.stringify(err));
+				}
+			});
+		};
+		function delectFriend() {
+			var model = api.require("model");
+			var relation = api.require('relation');
+			relation.findAll({
+				class : 'user',
+				id : userId,
+				column : 'friends'
+			}, function(ret, err) {
+				if (ret) {
+					alert('获取好友' + JSON.stringify(ret));
+					for (var i = 0; i < ret.length; i++) {
+						if (ret[i].note == note) {
+							delectid = ret[i].id;
+						}
+					}
+					model.deleteById({
+						class : 'friends',
+						id : delectid
+					}, function(ret, err) {
+						if (ret) {
+							var query = api.require("query");
+							query.createQuery(function(ret, err) {
+								if (ret) {
+									var queryId = ret.qid;
+									query.whereEqual({
+										qid : queryId,
+										column : "name",
+										value : note
+									});
+									var model = api.require("model");
+									model.findAll({
+										class : "user",
+										qid : queryId
+									}, function(ret, err) {
+										if (ret) {
+											alert('ret[0].id'+ret[0].id);
+											relation.findAll({
+												class : 'user',
+												id : ret[0].id,
+												column : 'friends'
+											}, function(ret, err) {
+												if (ret) {
+													alert('获取好友' + JSON.stringify(ret));
+													for (var i = 0; i < ret.length; i++) {
+														if (ret[i].friendname == username) {
+															delectid2 = ret[i].id;
+														}
+													}
+													alert('delectid2'+delectid2);
+													model.deleteById({
+														class : 'friends',
+														id : delectid2
+													}, function(ret, err) {
+														if (ret) {
+															alert('删除好友成功' + JSON.stringify(ret));
+															api.openWin({
+																name : 'Page',
+																url : 'win_Page.html',
+																pageParam : {
+																	username : username,
+																	userId : userId
+																}
+															});
+														} else {
+															alert('删除好友失败' + JSON.stringify(err));
+														}
+													});
+												} else {
+													alert('获取好友失败' + JSON.stringify(err));
+												}
+											});
+										} else {
+											alert('好友·tome失败' + JSON.stringify(err));
+										}
+									});
+								} else {
+									alert(JSON.stringify(err));
+								}
+							});
+						} else {
+							alert('删除好友失败' + JSON.stringify(err));
+						}
+					});
+				} else {
+					alert('获取好友失败' + JSON.stringify(err));
+				}
+			});
+		}
+	</script>
+</html>

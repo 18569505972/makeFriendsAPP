@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>title</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/msg.css" />
+		<script src="../script/jquery-1.9.1.js"></script>
+	</head>
+	<body></body>
+	<script type="text/javascript">
+		apiready = function() {
+			//api.execScript({name:'Page', script: 'firstPage()'});
+			userId = api.pageParam.userId;
+			username=api.pageParam.username;
+			name=api.pageParam.name;
+			var model = api.require("model");
+			var relation = api.require('relation');
+			relation.findAll({
+				class : 'user',
+				id : userId,
+				column : 'friends'
+			}, function(ret, err) {
+				if (ret) {
+					alert('获取好友' + JSON.stringify(ret));
+					var div = $('');
+					for (var i = 0; i < ret.length; i++) {
+						$("body").append("<div class='friend' tamode><span class='name'></span><input type='hidden' value='"+ret[i].id+"'</div>");
+						var nameArry = document.getElementsByClassName("name");
+						nameArry[i].innerHTML = ret[i].note;
+					}
+					$(".friend").each(function() {
+						$(this).on('click', function() {
+							var note = $(this).children(".name").text();
+							var friendid=$(this).children("input").eq(0).val();
+							api.openWin({
+								name : 'talk_menu',
+								url : 'talk_menu.html',
+								bounces : false,
+								softInputMode:'resize',
+								pageParam : {
+									meuserId : userId,
+									note : note,
+									friendid:friendid,
+									username:username,
+									name:name
+								}
+							});
+						});
+					})
+				} else {
+					alert('获取好友失败' + JSON.stringify(err));
+				}
+			});
+		};
+	</script>
+</html>

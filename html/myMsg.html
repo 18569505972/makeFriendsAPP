@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/communication.css"/>
+</head>
+<body>
+	<header>
+		<img src="../image/return.png" id="return" onclick="returnWinPage()">
+		<span>我的资料</span>
+	</header>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+	apiready = function(){
+		userId = api.pageParam.userId;
+		api.openFrame({
+	            name: 'msglist',
+	            url: 'msglist.html',
+	            rect: {
+		            x:0,
+		            y:48,
+		            w:'auto',
+		            h:'auto'
+	            },
+	            bounces : true,
+	            bgColor:'../image/login02.jpg',
+	            pageParam:{
+					 	userId:userId
+					 }
+            });
+	};
+	function returnWinPage(){
+			api.closeWin({
+				name:'myMsg'
+            });
+		}
+</script>
+</html>

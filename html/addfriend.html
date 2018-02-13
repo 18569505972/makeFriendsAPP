@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>添加好友</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/addfriend.css"/>
+	</head>
+	<body>
+		<header>
+			<img src="../image/return.png" id="return" onclick="returnWinPage()" tamode>
+			<input type="number" placeholder="请输入账号"  id="searchTxt" maxlength="8"/>
+			<img src="../image/search.png" id="search" onclick="searchUser()" tamode/>
+		</header>
+		<section>
+			<div id="friend">
+				<span id="username"></span><span id="name"></span>
+			</div>
+			<p id="error"></p>
+		</section>
+	</body>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript">
+		apiready = function() {
+			userId = api.pageParam.userId;
+			username = api.pageParam.username;
+		}
+		function returnWinPage() {
+			api.closeWin({
+				name : 'addfriend'
+			});
+		}
+
+		function searchUser() {
+			var searchTxt = document.getElementById("searchTxt").value;
+			if (username == searchTxt) {
+				alert("对不起，不能搜索自己的账号！！！");
+				return;
+			};
+			var query = api.require("query");
+			query.createQuery(function(ret, err) {
+				if (ret && ret.qid) {
+					var queryId = ret.qid;
+					query.whereEqual({
+						qid : queryId,
+						column : "username",
+						value : username
+					});
+					var model = api.require("model");
+					model.findAll({
+						class : "user",
+						qid : queryId
+					}, function(ret, err) {
+						if (ret && ret != "") {
+							var name = ret[0].name;
+							query.createQuery(function(ret, err) {
+								if (ret && ret.qid) {
+									var queryId = ret.qid;
+									query.whereEqual({
+										qid : queryId,
+										column : "username",
+										value : searchTxt
+									});
+									var model = api.require("model");
+									model.findAll({
+										class : "user",
+										qid : queryId
+									}, function(ret, err) {
+										if (ret && ret != "") {
+											document.getElementById("error").style.display = "none";
+											document.getElementById("friend").style.display = "block";
+											document.getElementById("username").innerHTML = ret[0].username;
+											document.getElementById("name").innerHTML = ret[0].name;
+											document.getElementById("friend").addEventListener("click", function() {
+												api.openWin({
+													name : 'friend_msg',
+													url : 'friend_msg.html',
+													bounces : true,
+													pageParam : {
+														userId : userId,
+														searchusername : searchTxt,
+														searchId : ret[0].id,
+														username : username,
+														friendname : ret[0].name,
+														name : name
+													}
+												});
+											})
+										} else {
+											document.getElementById("friend").style.display = "none";
+											document.getElementById("error").style.display = "block";
+											document.getElementById("username").innerHTML = "";
+											document.getElementById("name").innerHTML = "";
+											document.getElementById("error").innerHTML = "您输入的账号不存在！！！";
+										}
+									});
+								} else {
+									alert("err" + JSON.stringify(err));
+								}
+							});
+						} else {
+							alert("查询我的名字" + JSON.stringify(err));
+						}
+					});
+				} else {
+					alert("创建查询" + JSON.stringify(err));
+				}
+			});
+		}
+	</script>
+</html>

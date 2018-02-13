@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>title</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/noteResetPWD.css"/>
+		<script src="../script/APICloud-rest-SHA1.js"></script>
+	</head>
+	<body>
+		<header>
+			<img src="../image/login02.jpg"  id="bgcolor"/>
+		</header>
+		<section>
+			<div class="msg">
+				<span>手机号：</span>
+				<input type="tel"  tapmode id="mobile" placeholder="请输入手机号" maxlength="13"/>
+			</div>
+			<hr />
+			<div class="msg" id="note">
+				<span>验证码：</span>
+				<input type="number" tapmode class="check" id="shortMsg" placeholder="请输入验证码" maxlength="6"/>
+				<button  type="button" onClick="sendNote()" tapmode>
+					获取
+				</button>
+			</div>
+			<hr  id="hr"/>
+			<div id="error"></div>
+		</section>
+		<footer id="LOGIN" onclick="RegisterPWD()" tapmode>
+			下一页
+		</footer>
+	</body>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript">
+		apiready = function() {
+		};
+		var wait = 60;
+		function sendNote() {
+			var o = document.getElementsByTagName("button");
+			var mobile = document.getElementById('mobile').value;
+			var setTime = setInterval(function() {
+				if (wait == 0) {
+					o[0].removeAttribute('disabled');
+					o[0].innerHTML = "获取";
+					//改变按钮中value的值
+					wait = 60;
+					clearInterval(setTime);
+				} else {
+					o[0].setAttribute("disabled", true);
+					//倒计时过程中禁止点击按钮
+					o[0].innerHTML = wait + "s";
+					//改变按钮中value的值
+					wait--;
+				}
+			}, 1000);
+			var str = $api.html(o[0]);
+			var str = str.replace(/\s/g, '')
+			if (str == "获取") {
+				alert(1);
+				var smsVerify = api.require('smsVerify');
+				smsVerify.register();
+				smsVerify.sms({
+					phone : mobile,
+				}, function(ret, err) {
+					if (ret.status) {
+						if (ret.smart == true) {// 安卓版特有功能 智能验证
+							api.alert({
+								msg : '智能验证成功：开发者可以在这里直接执行手机号验证成功之后的相关操作'
+							});
+						} else {
+							api.alert({
+								msg : '短信发送成功'
+							});
+						}
+					} else {
+						if (err.code == 603) {
+							document.getElementById('error').innerHTML = "请填写";
+						}
+						api.alert({
+							msg : err.code + ' ' + err.msg
+						});
+					}
+				}); setTime;
+			} else {
+				alert(2);
+			}
+		}
+
+		function RegisterPWD() {
+			var mobile = document.getElementById('mobile').value;
+			var shortMsg = document.getElementById('shortMsg').value;
+			var smsVerify = api.require('smsVerify');
+			/*smsVerify.register();
+			 smsVerify.verify({
+			 phone : mobile,
+			 code : shortMsg
+			 }, function(ret, err) {
+			 if (ret.status) {
+			 api.alert({
+			 msg : '验证成功'
+			 });*/
+			api.openWin({
+				name : 'win_common6',
+				url : 'win_common6.html',
+				bounces : false,
+				pageParam : {
+					vercord : shortMsg,
+					mobile : mobile
+				}
+			});
+			/*
+			 } else {
+			 api.alert({
+			 msg : err.code + ' ' + err.msg
+			 });
+			 }
+			 });*/
+		}
+	</script>
+</html>

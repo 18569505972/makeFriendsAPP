@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>title</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/communication.css"/>
+	</head>
+	<body>
+		<header>
+			<img src="../image/return.png" id="return" onclick="returnaddFriend()" tamode>
+			<span>发送请求</span>
+		</header>
+	</body>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript">
+		apiready = function() {
+			username = api.pageParam.username;
+			userId = api.pageParam.userId;
+			searchId=api.pageParam.searchId;
+			searchusername=api.pageParam.searchusername;
+			friendname=api.pageParam.friendname;
+			name=api.pageParam.name;
+			api.openFrame({
+				name : 'sendRequest',
+				bgcolor : '../image/login02.jpg',
+				url : 'sendRequest.html',
+				rect : {
+					x : 0,
+					y : 48,
+					w : 'auto',
+					h : 'auto'
+				},
+				bounces : false,
+				scrollEnabled : false,
+				pageParam:{
+					username:username,
+					userId:userId,
+					searchId:searchId,
+					searchusername:searchusername,
+					friendname:friendname,
+					name:name
+				}
+			});
+		};
+		function returnaddFriend(){
+			api.closeWin({
+				name:'friend_msg'
+            });
+		}
+	</script>
+</html>

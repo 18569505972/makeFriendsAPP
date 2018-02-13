@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>title</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/sendRequest.css"/>
+		<script src="../script/APICloud-rest-SHA1.js"></script>
+	</head>
+	<body>
+		<img src="../image/login02.jpg"  id="bgcolor"/>
+		<section>
+			<textarea maxlength="1000" placeholder="请输入您的请求信息,仅限1000字" id="textarea"></textarea>
+			<button id="btn" tamode onclick="sendrequest()">
+				发表
+			</button>
+		</section>
+	</body>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript">
+		apiready = function() {
+			username = api.pageParam.username;
+			userId = api.pageParam.userId;
+		};
+		function sendrequest() {
+			var msg = document.getElementById("textarea").value;
+			var query = api.require("query");
+			query.createQuery(function(ret, err) {
+				if (ret) {
+					var queryId = ret.qid;
+					query.whereEqual({
+						qid : queryId,
+						column : "id",
+						value : userId
+					});
+					var model = api.require("model");
+					model.findAll({
+						class : "user",
+						qid : queryId
+					}, function(ret, err) {
+						if (ret) {
+							alert('true' + JSON.stringify(ret));
+							var name = ret[0].name;
+							model.insert({
+								class : 'activity',
+								value : {
+									sendmen : name,
+									message : msg,
+									finger:0
+								}
+							}, function(ret, err) {
+								if (ret) {
+									alert("我发表了动态" + JSON.stringify(ret));
+									api.closeWin({
+										name : 'win_active'
+									});
+								} else {
+									alert("我没有发表了动态" + JSON.stringify(err));
+								}
+							});
+						} else {
+							alert('false' + JSON.stringify(err));
+						}
+					});
+				} else {
+					alert(JSON.stringify(err));
+				}
+			});
+		};
+		/*var relation = api.require('relation');
+		 relation.findAll({
+		 class : 'user',
+		 id : userId,
+		 column : 'friends'
+		 }, function(ret, err) {
+		 if (ret) {
+		 alert('查询我的朋友表' + JSON.stringify(ret));
+		 var ismyfriend;
+		 for (var s = 1; s < ret.length; s++) {
+		 if (ret[s].friendname == searchusername) {
+		 ismyfriend = 1;
+		 } else {
+		 ismyfriend = 0;
+		 }
+		 }
+		 if (ismyfriend == 1) {
+		 alert('你们已经是好友了！！');
+		 api.closeWin({
+		 name : 'friend_msg'
+		 });
+		 } else {
+		 alert('你们还不是是好友！！');
+		 relation.insert({
+		 class : 'user',
+		 id : userId,
+		 column : 'friends',
+		 value : {
+		 friendname : searchusername,
+		 note : friendname
+		 }
+		 }, function(ret, err) {
+		 if (ret) {
+		 alert('加入我的好友' + JSON.stringify(ret));
+		 relation.insert({
+		 class : 'user',
+		 id : searchId,
+		 column : 'friends',
+		 value : {
+		 friendname : username,
+		 note : name
+		 }
+		 }, function(ret, err) {
+		 if (ret) {
+		 api.openWin({
+		 name : 'Page',
+		 url : 'win_Page.html',
+		 bounces : false,
+		 pageParam : {
+		 userId : ret.userId,
+		 username : username,
+		 name : ret.name
+		 }
+		 });
+		 alert('好友同意添加' + JSON.stringify(ret));
+		 } else {
+		 alert('好友不同意添加' + JSON.stringify(err));
+		 }
+		 });
+		 } else {
+		 alert('加入我的好友出错' + JSON.stringify(err));
+		 }
+		 });
+		 }
+		 } else {
+		 alert('查询我的朋友表失败' + JSON.stringify(err));
+		 }
+		 });*/
+	</script>
+</html>

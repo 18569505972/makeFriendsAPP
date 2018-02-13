@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>title</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/win_page.css" />
+		<script src="../script/APICloud-rest-SHA1.js"></script>
+		<style>
+			.active {
+				background-color: rgba(0,0,0,0.3);
+			}
+			.act {
+				display: block;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<header id="header">
+				<div class="common msg act">
+					<div id="search" onclick="searchfriend()" tapmode></div>
+					<div id="communication" onclick="commuincation()" tapmode>
+						好友列表
+					</div>
+					<div id="add" onclick="addfriend()" tapmode>
+						添加好友
+					</div>
+				</div>
+				<div class="common activity">
+					<span>动态</span>
+					<label onclick="sendMessage()">发布</label>
+				</div>
+				<div class="common position">
+					<span>附近的人</span>
+				</div>
+				<div class="common my">
+					<label id="loginout" onclick="loginout()" tapmode>退出</label>
+					<img src="../image/ft.png">
+					<span id="name"></span>
+				</div>
+			</header>
+			<section></section>
+			<footer id="footer">
+				<ul>
+					<li onclick="randomSwitchBtn( this )" tapmode="hover" class="active">
+						消息
+					</li>
+					<li onclick="randomSwitchBtn( this )" tapmode="hover">
+						动态
+					</li>
+					<li onclick="randomSwitchBtn( this )" tapmode="hover">
+						附近
+					</li>
+					<li onclick="randomSwitchBtn( this )" tapmode="hover">
+						我的
+					</li>
+				</ul>
+			</footer>
+		</div>
+	</body>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript">
+		apiready = function() {
+			var header = $api.byId('header');
+			var footer = $api.byId('footer');
+			var headerH = $api.offset(header).h;
+			var footerH = footer.offsetHeight;
+			var frameH = $api.dom('section').offsetHeight;
+			userId = api.pageParam.userId;
+			username = api.pageParam.username;
+			api.addEventListener({
+				name : 'keyback'
+			}, function(ret, err) {
+				api.closeWidget({
+					id : 'A6948561790657',
+				});
+			});
+			var query = api.require("query");
+			query.createQuery(function(ret, err) {
+				if (ret && ret.qid) {
+					var queryId = ret.qid;
+					query.whereEqual({
+						qid : queryId,
+						column : "username",
+						value : username
+					});
+					var model = api.require("model");
+					model.findAll({
+						class : "user",
+						qid : queryId
+					}, function(ret, err) {
+						if (ret) {
+							document.getElementById("name").innerHTML = ret[0].name;
+							$api.setStorage("name", ret[0].name);
+							api.openFrameGroup({
+								name : 'group1',
+								scrollEnabled : false,
+								rect : {
+									x : 0,
+									y : headerH,
+									w : 'auto',
+									h : frameH
+								},
+								background : '../image/login02.jpg',
+								frames : [{
+									name : 'msg',
+									url : 'msg.html',
+									bounces : true,
+									bgColor : '../image/login02.jpg',
+									scrollEnabled : false,
+									pageParam : {
+										userId : userId,
+										username : username,
+										name : ret[0].name
+									}
+								}, {
+									name : 'activity',
+									url : 'activity.html',
+									bounces : true,
+									scrollEnabled : false,
+									bgColor : '../image/login02.jpg',
+									pageParam : {
+										userId : userId,
+										username : username
+									}
+								}, {
+									name : 'position',
+									url : 'position.html',
+									scrollEnabled : false,
+									bounces : true,
+									bgColor : 'rgba(0,0,0,0)',
+									pageParam : {
+										userId : userId,
+										username : username
+									}
+								}, {
+									name : 'person',
+									url : 'person.html',
+									scrollEnabled : false,
+									bounces : true,
+									bgColor : '../image/login02.jpg',
+									pageParam : {
+										userId : userId,
+										username : username
+									}
+								}],
+								index : 0
+							}, function(ret, err) {
+								var index = ret.index;
+							});
+						} else {
+							alert("记载失败" + JSON.stringify(err));
+						}
+					});
+				} else {
+					alert("err" + JSON.stringify(err));
+				}
+			});
+		};
+		function randomSwitchBtn(tag) {
+			if (tag == $api.dom('footer li.active'))
+				return;
+			var eFootLis = $api.domAll('footer li'), eHeaderLis = $api.domAll('header .common'), index = 0;
+			for (var i = 0, len = eFootLis.length; i < len; i++) {
+				if (tag === eFootLis[i]) {
+					index = i;
+				} else {
+					$api.removeCls(eFootLis[i], 'active');
+					$api.removeCls(eHeaderLis[i], 'act');
+				}
+			}
+			$api.addCls(eFootLis[index], 'active');
+			$api.addCls(eHeaderLis[index], 'act');
+			api.setFrameGroupIndex({
+				name : 'group1',
+				index : index,
+				reload : true,
+				scroll : true
+			});
+		}
+
+		function commuincation() {
+			api.openWin({
+				name : 'communication',
+				url : 'communication.html',
+				rect : {
+					x : 0,
+					y : 0,
+					w : 'auto',
+					h : 'auto'
+				},
+				bounces : false,
+				animation : {
+					type : "un_curl ",
+					subType : "from_right",
+					duration : 300
+				},
+				bgColor : '../image/login02.jpg',
+				pageParam : {
+					userId : userId,
+					username : username,
+				}
+			});
+		}
+
+		function addfriend() {
+			api.openWin({
+				name : 'addfriend',
+				url : 'addfriend.html',
+				rect : {
+					x : 0,
+					y : 0,
+					w : 'auto',
+					h : 'auto'
+				},
+				bounces : false,
+				animation : {
+					type : "un_curl ",
+					subType : "from_right",
+					duration : 300
+				},
+				bgColor : '../image/login02.jpg',
+				pageParam : {
+					userId : userId,
+					username : username,
+				}
+			});
+		}
+
+		function searchfriend() {
+			api.openWin({
+				name : 'searchfriend',
+				url : 'searchfriend.html',
+				rect : {
+					x : 0,
+					y : 0,
+					w : 'auto',
+					h : 'auto'
+				},
+				bounces : false,
+				animation : {
+					type : "un_curl ",
+					subType : "from_right",
+					duration : 300
+				},
+				bgColor : '../image/login02.jpg',
+				pageParam : {
+					userId : userId,
+					username : username,
+					win_page : 1,
+				}
+			});
+		}
+
+		function sendMessage() {
+			api.openWin({
+				name : 'win_active',
+				url : 'win_active.html',
+				rect : {
+					x : 0,
+					y : 0,
+					w : 'auto',
+					h : 'auto'
+				},
+				bounces : false,
+				animation : {
+					type : "un_curl ",
+					subType : "from_right",
+					duration : 300
+				},
+				bgColor : '../image/login02.jpg',
+				pageParam : {
+					userId : userId,
+					username : username,
+				}
+			});
+		}
+		function loginout() {
+			var client = new Resource("A6948561790657", "7C28A1B6-FDD1-8BB9-C88C-9A18AAC471DC");
+			alert($api.getStorage('token'));
+			client.setHeaders("authorization", $api.getStorage('token'));
+			var User = client.Factory("user");
+			User.logout({
+				token : $api.getStorage('token')
+			}, function(ret, err) {
+				if (ret) {
+					alert("注销成功" + JSON.stringify(ret));
+					$api.clearStorage();
+					api.closeWidget({
+						id : 'A6948561790657',
+						silent : true
+					});
+					api.openWin({
+						name : 'win_common',
+						url : 'win_common.html',
+						rect : {
+							x : 0,
+							y : 0,
+							w : 'auto',
+							h : 'auto'
+						},
+						bounces : false
+					});
+				} else {
+					alert("注销失败:" + JSON.stringify(ret))
+				}
+			});
+		}
+	</script>
+</html>

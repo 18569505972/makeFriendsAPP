@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>title</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/notes.css"/>
+		<script src="../script/jquery-1.9.1.js"></script>
+	</head>
+	<body>
+		<div id="container"></div>
+		<div id="footer">
+			<footer>
+				<img  src="../image/file.png" />
+				<input type="text"  id="sendmsg"/>
+				<button onclick="saveNotes()">
+					发送
+				</button>
+			</footer>
+		</div>
+	</body>
+	<script type="text/javascript">
+		apiready = function() {
+			meuserId = api.pageParam.meuserId;
+			note = api.pageParam.note;
+			friendid = api.pageParam.friendid;
+			username = api.pageParam.username;
+			name=api.pageParam.name;
+			var model = api.require("model");
+			//我发给朋友消息
+			var relation = api.require('relation');
+			relation.findAll({
+				class : 'user',
+				id : meuserId,
+				column : 'friends'
+			}, function(ret, err) {
+				if (ret) {
+					alert('查询我的朋友表' + JSON.stringify(ret));
+					relation.findAll({
+						class : 'friends',
+						id : friendid,
+						column : 'userMsg'
+					}, function(ret, err) {
+						if (ret) {
+							alert('查询我发给朋友的消息表' + JSON.stringify(ret));
+							for (var m = 0; m < ret.length; m++) {
+								if (ret[m].flag == "1") {
+									$("#container").append("<div class='note'><div class='time'>" + ret[m].createdAt + "</div><div class='model'><img src='../image/ft.png' class='myImg'><div class='msg'>" + ret[m].usermsg + "</div></div></div>");
+								} else {
+									$("#container").append("<div class='note'><div class='time'>" + ret[m].createdAt + "</div><div class='model'><img src='../image/ft.png' class='friendImg'><div class='msg'>" + ret[m].usermsg + "</div></div></div>");
+								}
+							}
+						} else {
+							alert('查询我发给朋友的消息表失败' + JSON.stringify(err));
+						}
+					});
+				} else {
+					alert('查询我的朋友表失败' + JSON.stringify(err));
+				}
+			});
+		};
+		function saveNotes() {
+			var sendmsg = $("#sendmsg").val();
+			userId = api.pageParam.userId;
+			var model = api.require("model");
+			//我发给朋友消息
+			var relation = api.require('relation');
+			relation.findAll({
+				class : 'user',
+				id : meuserId,
+				column : 'friends'
+			}, function(ret, err) {
+				if (ret) {
+					alert('查询我的朋友表' + JSON.stringify(ret));
+					relation.findAll({
+						class : 'friends',
+						id : friendid,
+						column : 'userMsg'
+					}, function(ret, err) {
+						if (ret) {
+							alert('查询我发给朋友的消息表' + JSON.stringify(ret));
+							relation.insert({
+								class : 'friends',
+								id : friendid,
+								column : 'userMsg',
+								value : {
+									usermsg : sendmsg,
+									flag : 1
+								}
+							}, function(ret, err) {
+								if (ret) {
+									alert('我的表中插入我发送的消息' + JSON.stringify(ret));
+									$("#container").append("<div class='note'><div class='time'>" + ret.createdAt + "</div><div class='model'><img src='../image/ft.png' class='myImg'><div class='msg'>" + ret.usermsg + "</div></div></div>");
+									//朋友收到我的消息
+									var query = api.require("query");
+									//查询会话朋友user的id
+									query.createQuery(function(ret, err) {
+										if (ret) {
+											alert('已查询到会话朋友user的id' + JSON.stringify(ret));
+											var queryId = ret.qid;
+											query.whereEqual({
+												qid : queryId,
+												column : "name",
+												value : note
+											});
+											var model = api.require("model");
+											model.findAll({
+												class : "user",
+												qid : queryId
+											}, function(ret, err) {
+												if (ret) {
+													alert('已查询到当前会话朋友user的id' + JSON.stringify(ret));
+													var realfriendsid = ret[0].id;
+													//查询会话朋友的朋友表
+													relation.findAll({
+														class : 'user',
+														id : realfriendsid,
+														column : 'friends'
+													}, function(ret, err) {
+														if (ret) {
+															alert('已查询到当前会话朋友的好友表' + JSON.stringify(ret));
+															//找到我在朋友的好友表中的id
+															alert(ret[0].note);
+															for (var j = 0; j < ret.length; j++) {
+																if (ret[j].note == name) {
+																	myid = ret[j].id;
+																	weAre = 1;
+																}
+															}
+															if (weAre == 1) {
+																//朋友接收到我的消息，并插入他的消息表中
+																relation.insert({
+																	class : 'friends',
+																	id : myid,
+																	column : 'userMsg',
+																	value : {
+																		usermsg : sendmsg,
+																		flag : 0//收到的
+																	}
+																}, function(ret, err) {
+																	if (ret) {
+																		alert('已插入到当前会话朋友的消息表' + JSON.stringify(ret));
+																	} else {
+																		alert('未插入到当前会话朋友的消息表' + JSON.stringify(err));
+																	}
+																});
+															}
+														} else {
+															alert('未查询到当前会话朋友的好友表' + JSON.stringify(err));
+														}
+													});
+												} else {
+													alert('未查询到当前会话朋友user的id' + JSON.stringify(err));
+												}
+											});
+										} else {
+											alert('未查询到会话朋友user的id' + JSON.stringify(err));
+										}
+									});
+								} else {
+									alert('我的表中未插入我发送的消息' + JSON.stringify(err));
+								}
+							});
+						} else {
+							alert('查询我发给朋友的消息表失败' + JSON.stringify(err));
+						}
+					});
+				} else {
+					alert('查询我的朋友表失败' + JSON.stringify(err));
+				}
+			});
+		}
+	</script>
+</html>

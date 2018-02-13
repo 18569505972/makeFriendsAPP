@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>title</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/finish.css" />
+		<script src="../script/APICloud-rest-SHA1.js"></script>
+	</head>
+	<body>
+		<header>
+			<img src="../image/login02.jpg"  id="bgcolor"/>
+		</header>
+		<section>
+			<div class="msg">
+				<span>输入密码：</span>
+				<input type="password" value="" tapmode id="password"/>
+			</div>
+			<hr />
+			<div class="msg">
+				<span>再次输入：</span>
+				<input type="password"  tapmode/>
+			</div>
+			<hr />
+		</section>
+		<footer id="LOGIN" onclick="finishRegister()" tapmode>
+			完成
+		</footer>
+	</body>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript">
+		apiready = function() {
+			vercode = api.pageParam.vercode;
+			mobile = api.pageParam.mobile;
+		};
+		function finishRegister() {
+			var password = $api.byId("password");
+			var passwordVal = password.value;
+			var query = api.require("query");
+			query.createQuery(function(ret, err) {
+				if (ret) {
+					var queryId = ret.qid;
+					query.whereEqual({
+						qid : queryId,
+						column : "mobile",
+						value : 18569505972
+					});
+					var model = api.require("model");
+					model.findAll({
+						class : "user",
+						qid : queryId
+					}, function(ret, err) {
+						if (ret) {
+							alert(ret.username)
+							alert(JSON.stringify(ret));
+						} else {
+							alert(JSON.stringify(err));
+						}
+					});
+				} else {
+					alert(JSON.stringify(err));
+				}
+			});
+			api.closeWin({
+				name : "win_common3",
+			});
+			api.closeWin({
+				name : "win_common4",
+			});
+			api.closeWin({
+				name : "win_common6",
+			});
+			/*var client = new Resource("A6948561790657", "7C28A1B6-FDD1-8BB9-C88C-9A18AAC471DC");
+			 var User = client.Factory("user");
+			 User.query({
+			 "filter" : {
+			 "fields" : {
+			 "mobile" : 18569505972
+			 },
+			 "where": {
+			 "mobile": 18569505972
+			 },
+			 "skip" : 0,
+			 "limit" : 20
+			 }
+			 }, function(ret, err) {
+			 if (ret) {
+			 alert("Model query:" + JSON.stringify(ret));
+			 } else {
+			 alert("Model query:" + JSON.stringify(err));
+			 }
+			 });*/
+			/*User.resetByMobile({
+			 "mobile" : mobile,
+			 "vercode" : vercode,
+			 "username" : username,
+			 "password" : passwordVal
+			 }, function(ret, err) {
+			 if (!err && ret.successful) {
+			 alert('发送成功');
+			 } else {
+			 alert('发送失败');
+			 }
+			 });*/
+		}
+	</script>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>title</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/msglist.css"/>
+		<script src="../script/APICloud-rest-SHA1.js"></script>
+	</head>
+	<body>
+		<p id="firstP">
+			我的头像<label onclick="resetname()">修改</label>
+		</p>
+		<p>
+			姓名<span id='name'></span>
+		</p>
+		<p>
+			账号<span id="username"></span>
+		</p>
+		<p>
+			学校<span id="school"></span>
+		</p>
+		<p>
+			专业<span id="professional"></span>
+		</p>
+		<p>
+			手机号<label onclick="resetname()">修改</label><span id="mobile"></span>
+		</p>
+		<p>
+			身份证号<span id='IDcard'></span>
+		</p>
+		<div id="shade"></div>
+		<div id="alert">
+			<input type="text" maxlength="10" placeholder="仅限10字" id="nickname"/>
+			<button id="cancel" onclick="closealert()">
+				取消
+			</button>
+			<button id="confirm" onclick="closealert()">
+				确定
+			</button>
+		</div>
+	</body>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript">
+		apiready = function() {
+			userId = api.pageParam.userId;
+			/*document.getElementById("confirm").addEventListener("click", function() {
+				var nickname = document.getElementById("nickname").value;
+				document.getElementById("shade").style.display = "none";
+				document.getElementById("alert").style.display = "none";
+				var model = api.require("model");
+				model.updateById({
+					class : 'user',
+					id : userId,
+					value : {
+						nickname : nickname
+					}
+				}, function(ret, err) {
+					if (ret) {
+						alert('昵称设置成功' + JSON.stringify(ret));
+						document.getElementById("setname").innerHTML = nickname;
+					} else {
+						alert('昵称未设置成功' + JSON.stringify(err));
+					}
+				});
+			});*/
+			var query = api.require("query");
+			query.createQuery(function(ret, err) {
+				if (ret) {
+					var queryId = ret.qid;
+					query.whereEqual({
+						qid : queryId,
+						column : "id",
+						value : userId
+					});
+					var model = api.require("model");
+					model.findAll({
+						class : "user",
+						qid : queryId
+					}, function(ret, err) {
+						if (ret) {
+							alert('true' + JSON.stringify(ret));
+							var str = ret[0].username.replace(ret[0].username.substring(0, 4), '****');
+							var name = ret[0].name.replace(ret[0].name.substring(1), '**');
+							var IDcard = ret[0].IDcard.replace(ret[0].IDcard.substring(3, 13), '***********');
+							var mobile = ret[0].mobile.replace(ret[0].mobile.substring(3, 6), '****');
+							document.getElementById('username').innerHTML = str;
+							document.getElementById('school').innerHTML = ret[0].school;
+							document.getElementById('professional').innerHTML = ret[0].professional;
+							document.getElementById('name').innerHTML = name;
+							document.getElementById('IDcard').innerHTML = IDcard;
+							document.getElementById('mobile').innerHTML = mobile;
+						} else {
+							alert('false' + JSON.stringify(err));
+						}
+					});
+				} else {
+					alert(JSON.stringify(err));
+				}
+			});
+		};
+		function resetname() {
+			document.getElementById("shade").style.display = "block";
+			document.getElementById("alert").style.display = "block";
+		}
+		function closealert(){
+			document.getElementById("alert").style.display = "none";
+			document.getElementById("shade").style.display = "none";
+		}
+	</script>
+</html>

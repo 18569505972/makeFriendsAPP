@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>title</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/finish.css" />
+		<script src="../script/APICloud-rest-SHA1.js"></script>
+	</head>
+	<body>
+		<header>
+			<img src="../image/login02.jpg"  id="bgcolor"/>
+		</header>
+		<section>
+			<div class="msg">
+				<span>输入密码：</span>
+				<input type="password" tapmode id="password" maxlength="6"/>
+			</div>
+			<hr />
+			<div class="msg">
+				<span>再次输入：</span>
+				<input type="password" tapmode id="password1" maxlength="6"/>
+			</div>
+			<hr />
+			<div id="error"></div>
+		</section>
+		<footer id="LOGIN" onclick="finishRegister()" tapmode>
+			完成
+		</footer>
+	</body>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript">
+		apiready = function() {
+			usernumVal = api.pageParam.usernumVal;
+			professionalVal = api.pageParam.professionalVal;
+			schoolName = api.pageParam.schoolName;
+			UserVal = api.pageParam.UserVal;
+			idcardVal = api.pageParam.idcardVal;
+			mobileVal = api.pageParam.mobileVal;
+		};
+		function finishRegister() {
+			var password = $api.byId("password");
+			var passwordVal = password.value;
+			var password = $api.byId("password1");
+			var password1Val = password.value;
+			var client = new Resource("A6948561790657", "7C28A1B6-FDD1-8BB9-C88C-9A18AAC471DC");
+			var User = client.Factory("user");
+			if (passwordVal != password1Val) {
+				document.getElementById('error').innerHTML = "密码不一致，请重新输入";
+				return;
+			}
+			User.save({
+				"username" : usernumVal,
+				"password" : passwordVal,
+				"professional" : professionalVal,
+				"school" : schoolName,
+				"name" : UserVal,
+				"IDcard" : idcardVal,
+				"mobile" : mobileVal
+			}, function(ret, err) {
+				if (JSON.stringify(ret)) {
+					api.closeWin({
+						name : "win_common1",
+					});
+					api.closeWin({
+						name : "win_common2",
+					});
+				} else {
+					alert("Model insert:" + JSON.stringify(err))
+				}
+			});
+		}
+	</script>
+</html>

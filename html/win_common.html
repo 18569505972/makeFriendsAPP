@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>Hello APP</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css" />
+		<link rel="stylesheet" type="text/css" href="../css/index.css"/>
+	</head>
+	<body>
+		<div id="wrap">
+			<div id="header">
+				<span id="title"></span>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript">
+		apiready = function() {
+			api.execScript({
+				frameName : "register",
+				script : 'sendMsg();'
+			});
+			api.addEventListener({
+				name : 'keyback'
+			}, function(ret, err) {
+				api.closeWidget({
+					id : 'A6948561790657',
+				});
+			});
+			//输出Log，Log将显示在APICloud Studio控制台
+			//console.log("Hello APICloud");
+			var header = $api.byId('header');
+			var title = document.getElementsByTagName('span');
+			//适配iOS7+，Android4.4+状态栏沉浸式效果，详见config文档statusBarAppearance字段
+			//动态计算header的高度，因iOS7+和Android4.4+上支持沉浸式效果，
+			//因此header的实际高度可能为css样式中声明的44px加上设备状态栏高度
+			//其中，IOS状态栏高度为20px，Android为25px
+			var headerH = $api.offset(header).h;
+			alert(headerH);
+			//footer高度为css样式中声明的30px
+			//var footerH = 30;
+			//frame的高度为当前window高度减去header和footer的高度
+			var frameH = api.winHeight - headerH;
+			api.openFrame({
+				name : 'main',
+				url : 'main.html',
+				bgcolor : 'rgba(0,0,0,0)',
+				rect : {
+					x : 0,
+					y : headerH,
+					w : 'auto',
+					h : frameH
+				},
+				bounces : false,
+				scrollEnabled : false
+			});
+		};
+	</script>
+</html>

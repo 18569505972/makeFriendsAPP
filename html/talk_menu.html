@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>消息界面</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/talkmenu.css"/>
+	</head>
+	<body>
+		<div class="container">
+			<header id="header">
+				<img src="../image/return.png" id="return" onclick="returnWinPage()">
+				<span id="friendusername"></span>
+				<label id="manage" onclick="manage()">管理</label>
+			</header>
+			<section></section>
+		</div>
+	</body>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript">
+		apiready = function() {
+			var header = $api.byId('header');
+			var headerH = $api.offset(header).h;
+			meuserId = api.pageParam.meuserId;
+			note = api.pageParam.note;
+			friendid = api.pageParam.friendid;
+			username=api.pageParam.username;
+			name=api.pageParam.name;
+			document.getElementById('friendusername').innerHTML=note;
+			api.openFrame({
+				rect : {
+					x : 0,
+					y : headerH,
+					w : 'auto',
+					h : 'auto'
+				},
+				name : 'notes',
+				url : 'notes.html',
+				bounces : false,
+				bgColor : '../image/login02.jpg',
+				softInputMode:'resize',
+				pageParam : {
+					meuserId : meuserId,
+					note : note,
+					friendid:friendid,
+					username:username,
+					name:name
+				}
+			});
+		};
+		function returnWinPage(){
+			api.closeWin({
+				name:'talk_menu'
+            });
+		}
+		function manage(){
+			api.openWin({
+				name : 'manage',
+				url : 'manage.html',
+				rect : {
+					x : 0,
+					y : 0,
+					w : 'auto',
+					h : 'auto'
+				},
+				bounces : true,
+				animation : {
+					type : "un_curl ",
+					subType : "from_right",
+					duration : 300
+				},
+				bgColor : '#000',
+				pageParam:{
+					 	userId:meuserId,
+					 	username:username,
+					 	note:note,
+					 	friendid:friendid
+					 }
+			});
+		}
+	</script>
+</html>

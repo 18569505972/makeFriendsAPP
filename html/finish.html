@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>title</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/finish.css" />
+		<script src="../script/APICloud-rest-SHA1.js"></script>
+	</head>
+	<body>
+		<header>
+			<img src="../image/login02.jpg"  id="bgcolor"/>
+		</header>
+		<section>
+			<div class="msg">
+				<span>输入密码：</span>
+				<input type="password" tapmode id="password" maxlength="6"/>
+			</div>
+			<hr />
+			<div class="msg">
+				<span>再次输入：</span>
+				<input type="password" tapmode id="password1" maxlength="6"/>
+			</div>
+			<hr />
+			<div id="error"></div>
+		</section>
+		<footer id="LOGIN" onclick="finishRegister()" tapmode>
+			完成
+		</footer>
+	</body>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript">
+		apiready = function() {
+		};
+		function finishRegister() {
+			api.closeWin({
+				name : "win_common3",
+			});
+			api.closeWin({
+				name : "win_common5",
+			});
+			api.closeWin({
+				name : "win_common7",
+			});
+		}
+	</script>
+</html>

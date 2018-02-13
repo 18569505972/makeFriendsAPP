@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>Hello APP</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css" />
+		<link rel="stylesheet" type="text/css" href="../css/index.css"/>
+	</head>
+	<body>
+		<div id="wrap">
+			<div id="header">
+				<img src="../image/return.png" id="return" tapmode>
+				<span id="title">完善资料</span>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript">
+		apiready = function() {
+			var header = $api.byId('header');
+			var title = document.getElementsByTagName('span');
+			//适配iOS7+，Android4.4+状态栏沉浸式效果，详见config文档statusBarAppearance字段
+			//动态计算header的高度，因iOS7+和Android4.4+上支持沉浸式效果，
+			//因此header的实际高度可能为css样式中声明的44px加上设备状态栏高度
+			//其中，IOS状态栏高度为20px，Android为25px
+			var headerH = $api.offset(header).h;
+			//footer高度为css样式中声明的30px
+			//var footerH = 30;
+			//frame的高度为当前window高度减去header和footer的高度
+			var frameH = api.winHeight - headerH;
+			var o = document.getElementById('return');
+			api.addEventListener({
+				name : 'keyback'
+			}, function(ret, err) {
+				api.closeWin({
+					name : "win_common1",
+				});
+			});
+			o.addEventListener('click', function() {
+				api.closeWin({
+					name : "win_common1",
+				});
+			});
+			api.openFrame({
+				name : 'register',
+				bgcolor : '../image/login02.jpg',
+				url : 'register.html',
+				rect : {
+					x : 0,
+					y : 48,
+					w : 'auto',
+					h : 'auto',
+				},
+				bounces : false,
+				scrollEnabled : false
+			});
+		};
+	</script>
+</html>

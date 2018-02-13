@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>title</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css"/>
+		<style>
+			body {
+			}
+		</style>
+	</head>
+	<body></body>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript">
+		apiready = function() {
+			//获取位置信息成功
+			var aMap = api.require('aMap');
+			aMap.open({
+				rect : {
+					x : 0,
+					y : 0,
+					w : 'auto',
+					h : 'suto'
+				},
+				showUserLocation : true,
+				zoomLevel : 16,
+				center : {
+					lon : 116.4021310000,
+					lat : 39.9994480000
+				},
+				fixedOn : api.frameName,
+				fixed : true
+			}, function(ret, err) {
+				if (ret.status) {
+					alert('ret' + JSON.stringify(ret));
+				} else {
+					alert(JSON.stringify(err));
+				}
+			});
+			api.getLocation(function(ret, err) {
+				if (ret && ret.status) {
+					alert(JSON.stringify(ret));
+				} else {
+					alert(JSON.stringify(err));
+				}
+			});
+			/*aMap.showUserLocation({
+			 isShow : true
+			 });
+			 aMap.setTrackingMode({
+			 animation : false,
+			 trackingMode : 'follow'
+			 });
+			 aMap.setCenter({
+			 coords : {
+			 lon : longitude,
+			 lat : latitude
+			 },
+			 animation : true
+			 });
+			 aMap.setMapAttr({
+			 type : 'satellite',
+			 trafficOn : true,
+			 zoomEnable : true,
+			 scrollEnable : true,
+			 building : true,
+			 overlookEnabled : false,
+			 rotateEnabled : false
+			 });
+			 aMap.setCompass({
+			 show : true,
+			 img : 'widget://res/compass.png',
+			 position : {
+			 x : 100,
+			 y : 100
+			 }
+			 });
+			 aMap.addAnnotations({
+			 annotations : [{
+			 id : 1,
+			 lon : longitude,
+			 lat : latitude
+			 }],
+			 icons : ['widget://'],
+			 draggable : false,
+			 timeInterval : 2.0
+			 }, function(ret) {
+			 if (ret.eventType == 'click') {
+			 alert(ret.id);
+			 }
+			 });
+			 aMap.addBillboard({
+			 id : 4,
+			 draggable : false,
+			 coords : {
+			 lon : longitude,
+			 lat : latitude
+			 },
+			 bgImg : 'widget://image/aMapTest.png',
+			 content : {
+			 title : '我',
+			 subTitle : 'AAAA',
+			 illus : 'http://ico.ooopic.com/ajax/iconpng/?id=145044.png'
+			 },
+			 styles : {
+			 titleColor : '#000',
+			 titleSize : 10,
+			 subTitleColor : '#999',
+			 subTitleSize : 10,
+			 illusAlign : 'left'
+			 }
+			 }, function(ret) {
+			 if (ret) {
+			 alert(JSON.stringify(ret));
+			 }
+			 });*/
+		};
+	</script>
+</html>

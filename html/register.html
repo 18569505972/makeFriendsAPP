@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>title</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/register.css" />
+		<script src="../script/APICloud-rest-SHA1.js"></script>
+	</head>
+	<body>
+		<header>
+			<img src="../image/login02.jpg"  id="bgcolor"/>
+		</header>
+		<section>
+			<div class="msg">
+				学<span class="spaceTwo"></span>校：
+				<input type="text" id="school" maxlength="30" placeholder="请填写所在学校"/>
+			</div>
+			<hr />
+			<div class="msg">
+				学<span class="spaceTwo"></span>号：
+				<input type="number" id="username" maxlength="8" placeholder="8位学号"/>
+			</div>
+			<hr />
+			<div class="msg">
+				专<span class="spaceTwo"></span>业：
+				<input type="text"  id="professional" maxlength="30" placeholder="请填写所学专业"/>
+			</div>
+			<hr />
+			<div class="msg">
+				姓<span class="spaceTwo"></span>名：
+				<input type="text"  id="User" maxlength="30" placeholder="请填写真实姓名"/>
+			</div>
+			<hr />
+			<div class="msg">
+				<span>身份证号：</span>
+				<input type="text" id="idcard" maxlength="18" placeholder="18位身份证号吗"/>
+			</div>
+			<hr />
+			<div class="msg">
+				手<span class="spaceNine"></span>机<span class="spaceNine"></span>号：
+				<input type="tel" id="mobile" maxlength="13" placeholder="13位手机号吗"/>
+			</div>
+			<hr />
+			<div id="error"></div>
+		</section>
+		<footer id="LOGIN" onclick="RegisterPWD()" tapmode>
+			下一页
+		</footer>
+	</body>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript">
+		apiready = function() {
+		};
+		function RegisterPWD() {
+			var usernumVal = document.getElementById("username").value;
+			var schoolName = document.getElementById("school").value;
+			var UserVal = document.getElementById("User").value;
+			var idcardVal = document.getElementById("idcard").value;
+			var mobileVal = document.getElementById("mobile").value;
+			var professionalVal = document.getElementById("professional").value;
+			if((!schoolName) || (!UserVal) || (!usernumVal) || (!idcardVal) || (!mobileVal) || (!professionalVal)){
+				document.getElementById('error').innerHTML="请填写所有信息";
+				return;
+			}
+			api.openWin({
+				name : 'win_common2',
+				url : 'win_common2.html',
+				bounces : false,
+				pageParam : {
+					usernumVal : usernumVal,
+					schoolName : schoolName,
+					UserVal : UserVal,
+					idcardVal : idcardVal,
+					mobileVal : mobileVal,
+					professionalVal : professionalVal
+				}
+			});
+		}
+	</script>
+</html>

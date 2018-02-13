@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>添加好友</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/addfriend.css"/>
+	</head>
+	<body>
+		<header>
+			<img src="../image/return.png" id="return" onclick="returnWinPage()" tamode>
+			<input type="number" placeholder="请输入账号"  id="searchTxt" maxlength="8"/>
+			<img src="../image/search.png" id="search" tamode onclick="searchUser()"/>
+		</header>
+		<section>
+			<div id='searchfriend'>
+				<span id='friendname'></span>
+			</div>
+			<p id="error"></p>
+		</section>
+	</body>
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript">
+		apiready = function() {
+			userId = api.pageParam.userId;
+			username = api.pageParam.username;
+			name = api.pageParam.name;
+		}
+		function returnWinPage() {
+			api.closeWin({
+				name : 'searchfriend'
+			});
+		}
+
+		function searchUser() {
+			var searchTxt = document.getElementById("searchTxt").value;
+			var model = api.require("model");
+			//我发给朋友消息
+			var relation = api.require('relation');
+			relation.findAll({
+				class : 'user',
+				id : userId,
+				column : 'friends'
+			}, function(ret, err) {
+				if (ret) {
+					alert('查询我的朋友表' + JSON.stringify(ret));
+					var searchflag;
+					for (var n = 0; n < ret.length; n++) {
+						if (ret[n].friendname == searchTxt) {
+							searchflag = 1;
+							friendid = ret[n].id;
+							note=ret[n].note;
+							break;
+						}
+					}
+					if (searchflag == 1) {
+						document.getElementById("error").style.display = "none";
+						document.getElementById("searchfriend").style.display = "block";
+						document.getElementById("friendname").innerHTML = note+"&nbsp;&nbsp;"+ret[0].friendname;
+						if (api.pageParam.win_page == 1) {
+							document.getElementById("searchfriend").addEventListener("click", function() {
+								api.openWin({
+									name : 'talk_menu',
+									url : 'talk_menu.html',
+									bounces : false,
+									softInputMode : 'resize',
+									pageParam : {
+										meuserId : userId,
+										note : note,
+										friendid : friendid,
+										username : username
+									}
+								});
+							})
+						} else {
+							document.getElementById("searchfriend").addEventListener("click", function() {
+								api.openWin({
+									name : 'manage',
+									url : 'manage.html',
+									rect : {
+										x : 0,
+										y : 0,
+										w : 'auto',
+										h : 'auto'
+									},
+									bounces : true,
+									animation : {
+										type : "un_curl ",
+										subType : "from_right",
+										duration : 300
+									},
+									bgColor : '#000',
+									pageParam : {
+										userId : userId,
+										username : username,
+										note : note,
+										friendid : friendid
+									}
+								});
+							})
+						}
+					} else {
+						document.getElementById("searchfriend").style.display = "none";
+						document.getElementById("error").style.display = "block";
+						document.getElementById("friendname").innerHTML = "";
+						document.getElementById("error").innerHTML = "您没有此好友！！！";
+					}
+				} else {
+					alert('查询我的朋友表失败' + JSON.stringify(err));
+				}
+			});
+		}
+	</script>
+</html>

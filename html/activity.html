@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+		<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+		<title>title</title>
+		<link rel="stylesheet" type="text/css" href="../css/api.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/activity.css"/>
+		<style>
+			body {
+			}
+		</style>
+	</head>
+	<body>
+		<div id="shade"></div>
+		<div id="alert">
+			<input type="text" maxlength="300" placeholder="仅限300字" id="responseinput"/>
+			<button id="cancel" onclick="closealert()">
+				取消
+			</button>
+			<button id="confirm" onclick="closealert()">
+				确定
+			</button>
+		</div>
+		<div class="container"></div>
+	</body>
+	<script src="../script/jquery-1.9.1.js"></script>
+	<script type="text/javascript">
+		apiready = function() {
+			userId = api.pageParam.userId;
+			username = api.pageParam.username;
+			var query = api.require("query");
+			query.createQuery(function(ret, err) {
+				if (ret) {
+					var queryId = ret.qid;
+					var query = api.require('query');
+					query.desc({
+						qid : queryId,
+						column : 'id'
+					});
+					query.limit({
+						qid : queryId,
+						value : 10
+					});
+					var model = api.require("model");
+					model.findAll({
+						class : "activity",
+						qid : queryId
+					}, function(ret, err) {
+						if (ret) {
+							alert('查询前10条数据' + JSON.stringify(ret));
+							responseactiveid=ret[0].id;
+							for (var i = 0; i < ret.length; i++) {
+								var sendmen = ret[i].sendmen;
+								var createdAt = ret[i].createdAt;
+								var message = ret[i].message;
+								var relation = api.require('relation');
+								var id = ret[i].id;
+								$(".container").append("<div class='header'><img src='../image/ft.png'/><span>" + sendmen + "</span><label>" + createdAt + "</label></div><div class='section'><p>" + message + "</p><div class='operator'><input type='hidden' value='" + id + "'/><img src='../image/finger.png'  class='finger'/><img src='../image/msg.png'  class='msg'/></div></div><div class='footer' id='hh" + i + "'><input type='hidden' value='" + id + "'/><p>已有50人为你点赞</p></div>");
+							}
+							$(".msg").each(function() {
+								$(this).on('click', function() {
+									var responsemenid = $(this).siblings("input").val();
+									document.getElementById("shade").style.display = "block";
+									document.getElementById("alert").style.display = "block";
+								});
+							});
+							$(".finger").each(function() {
+								$(this).on('click', function() {
+									var fingerid = $(this).siblings("input").val();
+									var query = api.require("query");
+									query.createQuery(function(ret, err) {
+										if (ret) {
+											var queryId = ret.qid;
+											query.whereEqual({
+												qid : queryId,
+												column : "id",
+												value : fingerid
+											});
+											var model = api.require("model");
+											model.findAll({
+												class : "activity",
+												qid : queryId
+											}, function(ret, err) {
+												if (ret) {
+													alert(ret[0].finger);
+													var count=ret[0].finger+1;
+													var model = api.require('model');
+													model.updateById({
+														class : 'user',
+														id : ret[0].id,
+														value : {
+															finger : count
+														}
+													}, function(ret, err) {
+														if (ret) {
+															alert("技术"+JSON.stringify(ret));
+														} else {
+															alert(JSON.stringify(err));
+														}
+													});
+												} else {
+													alert('false' + JSON.stringify(err));
+												}
+											});
+										} else {
+											alert(JSON.stringify(err));
+										}
+									});
+								});
+							});
+							$(".footer").each(function(index) {
+								var footerid = $(this).children("input").val();
+								relation.findAll({
+									class : 'activity',
+									id : footerid,
+									column : 'response'
+								}, function(ret, err) {
+									if (ret) {
+										for (var j = 0; j < ret.length; j++) {
+											$(".footer").eq(index).append("<div><label class='responsemen'>" + ret[j].responsemen + ":</label><span class='response'>" + ret[j].responsecontent + "</span></div>");
+										}
+									} else {
+										alert(JSON.stringify(err));
+									}
+								});
+							});
+							$("#confirm").on("click", function() {
+								var query = api.require("query");
+								var response = $("#responseinput").val();
+								query.createQuery(function(ret, err) {
+									if (ret) {
+										var queryId = ret.qid;
+										query.whereEqual({
+											qid : queryId,
+											column : "id",
+											value : userId
+										});
+										var model = api.require("model");
+										model.findAll({
+											class : "user",
+											qid : queryId
+										}, function(ret, err) {
+											if (ret) {
+												alert('true' + JSON.stringify(ret));
+												var name = ret[0].name;
+												var relation = api.require('relation');
+												relation.insert({
+													class : 'activity',
+													id : responseactiveid,
+													column : 'response',
+													value : {
+														responsemen : name,
+														responsecontent : response
+													}
+												}, function(ret, err) {
+													if (ret) {
+														alert("footer" + JSON.stringify(ret));
+														$(".footer").append("<div><label class='responsemen'>" + ret.responsemen + "：</label><span class='response'>" + ret.responsecontent + "</span></div>");
+													} else {
+														alert(JSON.stringify(err));
+													}
+												});
+											} else {
+												alert('false' + JSON.stringify(err));
+											}
+										});
+									} else {
+										alert(JSON.stringify(err));
+									}
+								});
+							})
+						} else {
+							alert('false' + JSON.stringify(err));
+						}
+					});
+				} else {
+					alert(JSON.stringify(err));
+				}
+			});
+		};
+		function closealert() {
+			document.getElementById("alert").style.display = "none";
+			document.getElementById("shade").style.display = "none";
+		}
+	</script>
+</html>

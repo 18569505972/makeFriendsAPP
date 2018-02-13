@@ -1,0 +1,170 @@
+html, body {
+	height: 100%;
+	font-family: Microsoft YaHei;
+}
+.container {
+	height: 100%;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-box-orient: vertical;
+	-webkit-flex-flow: column;
+	flex-flow: column;
+}
+header {
+	background-image:url('../image/login01.jpg');
+	background-repeat:no-repeat;
+	background-size:100% 100%;
+	height:48px;
+	width:100%;
+	text-align: center;
+}
+.msg{
+	display:none;
+	padding:5px 0;
+}
+.activity{
+	display:none;
+	font-size: 22px;
+	color:#FFFFFF;
+	padding:13px 0;
+	height:22px;
+	line-height:22px;
+	text-align:center;
+	position: relative;
+}
+.activity label{
+    position:absolute;
+	font-size: 20px;
+	top:14px;
+	right:18px;
+}
+.position{
+	display:none;
+	font-size: 22px;
+	color:#FFFFFF;
+	padding:13px 0;
+	height:22px;
+	line-height:22px;
+	text-align:center;
+}
+.my{
+	display:none;
+	font-size: 22px;
+	color:#FFFFFF;
+	padding:13px 0;
+	height:22px;
+	line-height:22px;
+	text-align:center;
+	position: relative;
+}
+.my label{
+    position:absolute;
+	font-size: 20px;
+	top:14px;
+	right:18px;
+}
+.my img{
+	position:absolute;
+	height: 40px;
+	top:4px;
+	left:18px;
+}
+#search{
+    display:inline-block;
+	background-color:rgba(256,256,256,0.32);
+	background-image:url('../image/search.png');
+	background-repeat:no-repeat;
+	background-size:23.5px 23.5px;
+	background-position:205px center;
+	width:238px;
+	height:38px;
+	border-bottom-left-radius: 2em;
+	border-bottom-right-radius: 2em;
+	border-top-left-radius: 2em;
+	border-top-right-radius: 2em;
+}
+#communication{
+	display:inline-block;
+	background-image:url('../image/communication.png');
+	background-repeat:no-repeat;
+	background-size:auto 27px;
+	background-position:center top;
+	width:40px;
+	height:10px;
+	padding-top:28px;
+	padding-left:3px;
+	color:#FDEAF1;
+	font-size: 10px;
+	text-align:center;
+}
+#add{
+	display:inline-block;
+	background-image:url('../image/add.png');
+	background-repeat:no-repeat;
+	background-size:auto 27px;
+	background-position:center top;
+	padding-left:3px;
+	width:40px;
+	height:10px;
+	padding-top:28px;
+	color:#FDEAF1;
+	font-size: 10px;
+	text-align:center;
+}
+section {
+	-webkit-box-flex: 1;
+	-webkit-flex: 1;
+	flex: 1;
+	background-image:url('../image/login02.jpg');
+	background-repeat:no-repeat;
+	background-size:100% auto;
+	margin-top:-1px;
+	width: 100%;
+}
+footer{
+	background-image:url('../image/foot.jpg');
+	background-repeat:no-repeat;
+	background-size:100% 100%;
+	height: 54px;
+}
+ul{
+	display:inline-block;
+	list-style: none;
+	width: 100%;
+	height: 54px;
+	text-align: justify;
+}
+li{
+	width:24%;
+	height:20px;
+	padding-top:34px;
+	display:inline-block;
+	color: #FFFFFF;
+	font-size:12.5px;
+	text-align:center;
+}
+li:nth-child(1){
+	background-image:url('../image/msg.png');
+	background-repeat:no-repeat;
+	background-position:center 7px;
+	background-size:31px 26px;
+}
+li:nth-child(2){
+	background-image:url('../image/activity.png');
+	background-repeat:no-repeat;
+	background-size:31px 26px;
+	background-position:center 7px;
+}
+li:nth-child(3){
+	background-image:url('../image/position.png');
+	background-repeat:no-repeat;
+	background-size:31px 26px;
+	background-position:center 7px;
+}
+li:nth-child(4){
+	background-image:url('../image/person.png');
+	background-repeat:no-repeat;
+	background-position:center 7px;
+	background-size:31px 26px;
+}

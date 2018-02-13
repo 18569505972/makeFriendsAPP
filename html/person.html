@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/person.css"/>
+</head>
+<body>
+	<p id="myMsg" onclick="myMsg()" tamode>我的资料</p>
+	<p>安全中心</p>
+	<p>设置</p>
+	<p>关于</p>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+	apiready = function(){
+		userId = api.pageParam.userId;
+	};
+	function myMsg(){
+		api.openWin({
+				name : 'myMsg',
+				url : 'myMsg.html',
+				rect : {
+					x : 0,
+					y : 0,
+					w : 'auto',
+					h : 'auto'
+				},
+				bounces : false,
+				animation : {
+					type : "un_curl ",
+					subType : "from_right",
+					duration : 300
+				},
+				bgColor : '../image/login02.jpg',
+				pageParam:{
+					 	userId:userId
+					 }
+			});
+	}
+</script>
+</html>
